@@ -1,1 +1,47 @@
-Salam.
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sub Panel</title>
+<style>
+body{margin:0;padding:16px;background:#0d1117;color:#e6edf3;font-family:sans-serif}
+h1{font-size:20px}
+input{width:100%;box-sizing:border-box;padding:12px;margin:6px 0;background:#161b22;color:#e6edf3;border:1px solid #30363d;border-radius:8px;font-size:16px}
+button{padding:10px 14px;margin:4px 4px 0 0;background:#238636;color:#fff;border:0;border-radius:8px;font-size:15px}
+button.red{background:#da3633}
+.card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:12px;margin-top:12px;word-break:break-all}
+small{color:#8b949e}
+</style>
+</head>
+<body>
+<h1>Abuna paneli</h1>
+<input id="name" placeholder="Ady (mysal: Ahmet)">
+<input id="url" placeholder="Subscription link (https://...)">
+<button onclick="add()">Happ link döret</button>
+<div id="list"></div>
+<script>
+let items=JSON.parse(localStorage.getItem("subs")||"[]");
+function save(){localStorage.setItem("subs",JSON.stringify(items));render()}
+function add(){
+  const n=document.getElementById("name").value.trim();
+  const u=document.getElementById("url").value.trim();
+  if(!u)return alert("Link ýazyň");
+  items.unshift({n:n||"Ady ýok",u:u,h:"happ://add/"+u});
+  document.getElementById("name").value="";
+  document.getElementById("url").value="";
+  save();
+}
+function del(i){if(confirm("Pozmalymy?")){items.splice(i,1);save()}}
+function copy(t){navigator.clipboard.writeText(t).then(()=>alert("Göçürildi"))}
+function render(){
+  document.getElementById("list").innerHTML=items.map((x,i)=>
+   '<div class="card"><b>'+x.n+'</b><br><small>'+x.h+'</small><br>'+
+   '<button onclick="copy(items['+i+'].h)">Happ göçür</button>'+
+   '<button onclick="copy(items['+i+'].u)">Link göçür</button>'+
+   '<button class="red" onclick="del('+i+')">Poz</button></div>').join("");
+}
+render();
+</script>
+</body>
+  </html>
